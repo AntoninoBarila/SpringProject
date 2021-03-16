@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>antoninobarila.spring</groupId>
+		<artifactId>spring-project</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath >..</relativePath> <!-- lookup parent from repository -->
+	</parent>
+
+	<groupId>antoninobarila.springcloud</groupId>
+	<artifactId>spring-gateway</artifactId>
+	<version>1.0</version>
+	<packaging>jar</packaging>
+	<name>Spring Cloud Gaetway</name>
+	<description>Spring Boot - Cloud Gaetway</description>
+
+
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<spring-cloud.version>Hoxton.SR8</spring-cloud.version>
+		<aws-secretmanager.version>1.11.557</aws-secretmanager.version>
+		<java-platform-sdk.version>0.6-SNAPSHOT</java-platform-sdk.version>
+
+		<!-- springdoc versions -->
+		<springdoc.openapi.version>1.4.0</springdoc.openapi.version>
+		<springdoc.openapi.maven.plugin.version>1.0</springdoc.openapi.maven.plugin.version>
+		<!-- springboot maven plugin version for springdoc compatibility -->
+		<spring.boot.maven.plugin.version>2.1.10.RELEASE</spring.boot.maven.plugin.version>
+
+	</properties>
+
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.resilience4j</groupId>
+			<artifactId>resilience4j-spring-boot2</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-gateway</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>mockserver</artifactId>
+			<version>1.12.3</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mock-server</groupId>
+			<artifactId>mockserver-client-java</artifactId>
+			<version>3.10.8</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.carrotsearch</groupId>
+			<artifactId>junit-benchmarks</artifactId>
+			<version>0.7.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!-- AWS Security -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-secretsmanager</artifactId>
+			<version>${aws-secretmanager.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-sts</artifactId>
+			<version>1.11.704</version>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-lambda-java-core</artifactId>
+			<version>1.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>cloud.localstack</groupId>
+			<artifactId>localstack-utils</artifactId>
+			<version>0.2.1</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.14.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>3.12.1</version>
+		</dependency>
+
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.github.resilience4j</groupId>
+				<artifactId>resilience4j-circuitbreaker</artifactId>
+				<version>1.4.0</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<build>
+		<plugins>
+			<!-- Required section -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>pre-integration-test</id>
+						<goals>
+							<goal>start</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>post-integration-test</id>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>write</id>
+			<activation>
+				<property>
+					<name>env.ENV_WRITE</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springdoc</groupId>
+						<artifactId>springdoc-openapi-maven-plugin</artifactId>
+						<version>${springdoc.openapi.maven.plugin.version}</version>
+						<executions>
+							<execution>
+								<id>integration-test</id>
+								<goals>
+									<goal>generate</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<apiDocsUrl>http://localhost:8080/api-docs</apiDocsUrl>
+							<outputFileName>write.json</outputFileName>
+							<outputDir>${project.basedir}/../../infrastructure/platform/api</outputDir>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>read</id>
+			<activation>
+				<property>
+					<name>env.ENV_READ</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springdoc</groupId>
+						<artifactId>springdoc-openapi-maven-plugin</artifactId>
+						<version>${springdoc.openapi.maven.plugin.version}</version>
+						<executions>
+							<execution>
+								<id>integration-test</id>
+								<goals>
+									<goal>generate</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<apiDocsUrl>http://localhost:8080/api-docs</apiDocsUrl>
+							<outputFileName>read.json</outputFileName>
+							<outputDir>${project.basedir}/../../infrastructure/platform/api</outputDir>
+						</configuration>
+					</plugin>
+
+					<!-- /Required section -->
+				</plugins>
+			</build>
+		</profile>
+
+	</profiles>
+</project>
