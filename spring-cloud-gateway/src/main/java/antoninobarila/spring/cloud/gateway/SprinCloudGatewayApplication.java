@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.client.RestTemplate;
 
-import antoninobarila.spring.cloud.gateway.destination.interceptor.DestinationInterceptor;
+import antoninobarila.spring.cloud.gateway.salesforce.interceptor.DestinationInterceptor;
 
 @SpringBootApplication
 public class SprinCloudGatewayApplication {

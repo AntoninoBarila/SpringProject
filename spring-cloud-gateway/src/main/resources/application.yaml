@@ -1,9 +1,12 @@
+server:
+  port: 8080
 logging:
   level:
+    antoninobarila.spring.cloud.gateway: DEBUG
+    org.springframework.security: TRACE
     org.springframework.cloud.gateway: DEBUG
     reactor.netty.http.client: DEBUG
 spring :
-   environment: ${ENV}
    application:
       name: spring-gateway
    cloud:
@@ -11,15 +14,14 @@ spring :
          httpclient:
             ssl:
                 useInsecureTrustManager: true
-         routes:
-# rotta proxy API         
+         routes: 
            - id: ${endpoint_destination_serviceName}-proxy
              uri: ${endpoint_destination_protocol}://${endpoint_destination_fqdn}
              predicates:
                - Path=${endpoint_origin_context}/**
              filters:
-               - RewritePath=${endpoint_origin_context}/(?<segment>.*),${endpoint_destination_context}/$\{segment}
                - HttpHeaderGatewayFilter
+               - RewritePath=${endpoint_origin_context}/(?<segment>.*),${endpoint_destination_context}/$\{segment}
                - name: CircuitBreaker
                  args:
                    name: ${endpoint_destination_serviceName}-proxy
@@ -76,6 +78,8 @@ resilience4j.timelimiter:
 
 credential:
    oauth :
+      username : ${endpoint_destination_username}
+      password : ${endpoint_destination_password}
       clientID : ${endpoint_destination_clientID}
       clientSecret : ${endpoint_destination_clientSecret}
 

@@ -1,4 +1,4 @@
-package antoninobarila.spring.cloud.gateway.destination.helper;
+package antoninobarila.spring.cloud.gateway.salesforce.helper;
 
 public class Constants {
 

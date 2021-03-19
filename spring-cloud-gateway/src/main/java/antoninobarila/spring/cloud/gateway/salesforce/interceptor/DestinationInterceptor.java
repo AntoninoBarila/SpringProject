@@ -1,4 +1,4 @@
-package antoninobarila.spring.cloud.gateway.destination.interceptor;
+package antoninobarila.spring.cloud.gateway.salesforce.interceptor;
 
 import java.io.IOException;
 
