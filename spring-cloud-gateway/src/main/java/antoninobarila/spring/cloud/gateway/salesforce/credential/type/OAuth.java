@@ -9,14 +9,10 @@ import lombok.Data;
 @Component
 public class OAuth {
 
-	@Value("${credential.oauth.username}")
-	private String username;
-	@Value("${credential.oauth.password}")
-	private String password;
-
-	@Value("${credential.oauth.clientID}")
-	private String clientId;
-	@Value("${credential.oauth.clientSecret}")
-	private String clientSecret;
+	@Value("${credential.oauth.loginUrl}")
+	private String loginUrl;
+	
+	@Value("${credential.oauth.jwt}")
+	private String jwt;
 
 }

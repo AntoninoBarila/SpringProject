@@ -53,7 +53,26 @@
 <!-- 			<groupId>org.springframework.cloud</groupId> -->
 <!-- 			<artifactId>spring-cloud-starter-security</artifactId> -->
 <!-- 		</dependency> -->
-		
+<!-- 		<dependency> -->
+<!-- 			<groupId>io.springfox</groupId> -->
+<!-- 			<artifactId>springfox-swagger-ui</artifactId> -->
+<!-- 			<version>2.9.2</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>io.springfox</groupId> -->
+<!-- 			<artifactId>springfox-swagger2</artifactId> -->
+<!-- 			<version>2.9.2</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 		   <groupId>org.springdoc</groupId> -->
+<!-- 		   <artifactId>springdoc-openapi-webflux-core</artifactId> -->
+<!-- 		   <version>1.2.31</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 		   <groupId>org.springdoc</groupId> -->
+<!-- 		   <artifactId>springdoc-openapi-webflux-ui</artifactId> -->
+<!-- 		   <version>1.2.31</version> -->
+<!-- 		</dependency> -->
 		<!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -270,7 +289,6 @@
 							<outputDir>${project.basedir}/../../infrastructure/platform/api</outputDir>
 						</configuration>
 					</plugin>
-
 					<!-- /Required section -->
 				</plugins>
 			</build>

@@ -78,8 +78,10 @@ resilience4j.timelimiter:
 
 credential:
    oauth :
+      loginUrl :  ${endpoint_destination_login_url}
       username : ${endpoint_destination_username}
       password : ${endpoint_destination_password}
       clientID : ${endpoint_destination_clientID}
       clientSecret : ${endpoint_destination_clientSecret}
+      jwt : ${endpoint_destination_jwt}
 

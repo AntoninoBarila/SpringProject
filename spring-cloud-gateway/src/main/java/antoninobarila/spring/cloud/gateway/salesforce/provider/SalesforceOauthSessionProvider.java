@@ -12,30 +12,50 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import antoninobarila.spring.cloud.gateway.salesforce.credential.AuthCredentials;
+import antoninobarila.spring.cloud.gateway.salesforce.credential.SalesforceCredentialsBasic;
+import antoninobarila.spring.cloud.gateway.salesforce.credential.SalesforceCredentialsOAuth;
 
 @Service
 public class SalesforceOauthSessionProvider {
 
-	public String getBearer(AuthCredentials oauth) throws JsonMappingException, JsonProcessingException {
+	private static final String JWT_BEARER = "jwt-bearer";
+	private static final String PASSWORD = "password";
+
+	public String getBearer(SalesforceCredentialsBasic basic) throws JsonMappingException, JsonProcessingException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
-		params.add("username", oauth.getCredential().getUsername());
-		params.add("password", oauth.getCredential().getPassword());
-		params.add("client_secret", oauth.getCredential().getClientSecret());
-		params.add("client_id", oauth.getCredential().getClientId());
-		params.add("grant_type", "password");
+		params.add("username", basic.getCredential().getUsername());
+		params.add("password", basic.getCredential().getPassword());
+		params.add("client_secret", basic.getCredential().getClientSecret());
+		params.add("client_id", basic.getCredential().getClientId());
+		params.add("grant_type", PASSWORD);
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(params,
 				headers);
 
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<AuthenticationResponse> response = restTemplate.postForEntity("https://test.salesforce.com/services/oauth2/token",
-				request, AuthenticationResponse.class);
-		
+		ResponseEntity<AuthenticationResponse> response = restTemplate.postForEntity(
+				basic.getCredential().getLoginUrl() + "/services/oauth2/token", request, AuthenticationResponse.class);
+
 		return response.getBody().getAccess_token();
 	}
 
+	public String getBearer(SalesforceCredentialsOAuth oauth) throws JsonMappingException, JsonProcessingException {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+		params.add("assertion", oauth.getCredential().getJwt());
+		params.add("grant_type", JWT_BEARER);
+
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(params,
+				headers);
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<AuthenticationResponse> response = restTemplate.postForEntity(
+				oauth.getCredential().getLoginUrl() + "/services/oauth2/token", request, AuthenticationResponse.class);
+
+		return response.getBody().getAccess_token();
+	}
 
 }

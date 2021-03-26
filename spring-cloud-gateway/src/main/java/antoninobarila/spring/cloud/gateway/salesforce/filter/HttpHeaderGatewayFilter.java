@@ -11,7 +11,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import antoninobarila.spring.cloud.gateway.salesforce.credential.AuthCredentials;
+import antoninobarila.spring.cloud.gateway.salesforce.credential.SalesforceCredentialsBasic;
+import antoninobarila.spring.cloud.gateway.salesforce.credential.SalesforceCredentialsOAuth;
 import antoninobarila.spring.cloud.gateway.salesforce.provider.SalesforceOauthSessionProvider;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,10 +21,13 @@ import lombok.extern.slf4j.Slf4j;
 public class HttpHeaderGatewayFilter extends AbstractGatewayFilterFactory<HttpHeaderGatewayFilter.Config> {
 
 	@Autowired
-	private AuthCredentials authCredentials;
-
+	SalesforceCredentialsBasic basic;
+	
 	@Autowired
-	private SalesforceOauthSessionProvider oauthProvider;
+	SalesforceCredentialsOAuth oauth;
+	
+	@Autowired
+	SalesforceOauthSessionProvider provider;
 
 	public HttpHeaderGatewayFilter() {
 		super(Config.class);
@@ -60,16 +64,16 @@ public class HttpHeaderGatewayFilter extends AbstractGatewayFilterFactory<HttpHe
 
 	private void manageHeader(HttpHeaders h) throws IOException {
 
-		h.add(HttpHeaders.AUTHORIZATION, "Bearer ".concat(oauthProvider.getBearer(authCredentials)));
+		h.add(HttpHeaders.AUTHORIZATION, "Bearer ".concat(provider.getBearer(basic)));
 
 		if (h.getFirst("x-plt-session-id") == null)
 			h.add("x-plt-session-id", UUID.randomUUID().toString());
 
-		if (h.getFirst("x-plt-user-id") == null)
-			h.add("x-plt-user-id", "proxy-mulesoft");
-
-		if (h.getFirst("x-plt-solution-user") == null)
-			h.add("x-plt-solution-user", "proxy-mulesoft");
+//		if (h.getFirst("x-plt-user-id") == null)
+//			h.add("x-plt-user-id", "proxy-mulesoft");
+//
+//		if (h.getFirst("x-plt-solution-user") == null)
+//			h.add("x-plt-solution-user", "proxy-mulesoft");
 
 		if (h.getFirst("Content-Type") == null)
 			h.add("Content-Type", "application/json");

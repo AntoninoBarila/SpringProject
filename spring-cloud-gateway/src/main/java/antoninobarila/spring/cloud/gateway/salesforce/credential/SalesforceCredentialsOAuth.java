@@ -6,6 +6,6 @@ import antoninobarila.spring.cloud.gateway.credential.Credential;
 import antoninobarila.spring.cloud.gateway.salesforce.credential.type.OAuth;
 
 @Component
-public class AuthCredentials extends Credential<OAuth> {
+public class SalesforceCredentialsOAuth extends Credential<OAuth> {
 
 }
