@@ -53,7 +53,8 @@ public class HttpHeaderGatewayFilter extends AbstractGatewayFilterFactory<HttpHe
 					log.info("*******************************************************************************");
 					log.info("***************************** manageHeader        *****************************");
 					log.info("*******************************************************************************");
-				} catch (IOException e) {
+				} catch (Exception e) {
+					log.error(e.getMessage());
 					exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
 				}
 			});
@@ -62,9 +63,9 @@ public class HttpHeaderGatewayFilter extends AbstractGatewayFilterFactory<HttpHe
 		};
 	}
 
-	private void manageHeader(HttpHeaders h) throws IOException {
+	private void manageHeader(HttpHeaders h) throws Exception {
 
-		h.add(HttpHeaders.AUTHORIZATION, "Bearer ".concat(provider.getBearer(basic)));
+		h.add(HttpHeaders.AUTHORIZATION, "Bearer ".concat(provider.getBearer(oauth)));
 
 		if (h.getFirst("x-plt-session-id") == null)
 			h.add("x-plt-session-id", UUID.randomUUID().toString());

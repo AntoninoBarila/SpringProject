@@ -11,8 +11,17 @@ public class OAuth {
 
 	@Value("${credential.oauth.loginUrl}")
 	private String loginUrl;
+
+	@Value("${credential.oauth.username}")
+	private String username;
+
+	@Value("${credential.oauth.clientID}")
+	private String clientID;
 	
-	@Value("${credential.oauth.jwt}")
-	private String jwt;
+	@Value("${credential.oauth.certAlias}")
+	private String certAlias;
+
+	@Value("${credential.oauth.certPassword}")
+	private String certPassword;
 
 }

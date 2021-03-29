@@ -1,5 +1,6 @@
 package antoninobarila.spring.cloud.gateway.salesforce.provider;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,11 +15,15 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import antoninobarila.spring.cloud.gateway.salesforce.credential.SalesforceCredentialsBasic;
 import antoninobarila.spring.cloud.gateway.salesforce.credential.SalesforceCredentialsOAuth;
+import antoninobarila.spring.cloud.gateway.salesforce.helper.jwt.TokenUtility;
 
 @Service
 public class SalesforceOauthSessionProvider {
+	
+	@Autowired
+	TokenUtility tokenService;
 
-	private static final String JWT_BEARER = "jwt-bearer";
+	private static final String JWT_BEARER = "urn:ietf:params:oauth:grant-type:jwt-bearer";
 	private static final String PASSWORD = "password";
 
 	public String getBearer(SalesforceCredentialsBasic basic) throws JsonMappingException, JsonProcessingException {
@@ -41,11 +46,11 @@ public class SalesforceOauthSessionProvider {
 		return response.getBody().getAccess_token();
 	}
 
-	public String getBearer(SalesforceCredentialsOAuth oauth) throws JsonMappingException, JsonProcessingException {
+	public String getBearer(SalesforceCredentialsOAuth oauth) throws Exception{
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
-		params.add("assertion", oauth.getCredential().getJwt());
+		params.add("assertion", tokenService.getJwt(oauth));
 		params.add("grant_type", JWT_BEARER);
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(params,

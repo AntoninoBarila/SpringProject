@@ -11,8 +11,6 @@ import org.springframework.web.client.RestTemplate;
 import antoninobarila.spring.cloud.gateway.salesforce.interceptor.DestinationInterceptor;
 
 @SpringBootApplication
-//@EnableSwagger2
-//@OpenAPIDefinition(info = @Info(title = "Proxy Salesforce API", version = "1.0", description = "Documentation Salesforce PROXY API v1.0"))
 public class SprinCloudGatewayApplication {
 
 	@Autowired
