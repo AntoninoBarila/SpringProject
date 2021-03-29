@@ -14,7 +14,6 @@ public class Basic {
 	private String username;
 	@Value("${credential.oauth.password}")
 	private String password;
-
 	@Value("${credential.oauth.clientID}")
 	private String clientId;
 	@Value("${credential.oauth.clientSecret}")

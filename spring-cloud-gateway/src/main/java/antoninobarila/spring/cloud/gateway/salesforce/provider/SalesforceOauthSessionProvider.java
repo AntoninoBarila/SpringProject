@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import antoninobarila.spring.cloud.gateway.salesforce.credential.SalesforceCredentialsBasic;
 import antoninobarila.spring.cloud.gateway.salesforce.credential.SalesforceCredentialsOAuth;
+import antoninobarila.spring.cloud.gateway.salesforce.helper.Constants;
 import antoninobarila.spring.cloud.gateway.salesforce.helper.jwt.TokenUtility;
 
 @Service
@@ -22,19 +23,15 @@ public class SalesforceOauthSessionProvider {
 	
 	@Autowired
 	TokenUtility tokenService;
-
-	private static final String JWT_BEARER = "urn:ietf:params:oauth:grant-type:jwt-bearer";
-	private static final String PASSWORD = "password";
-
 	public String getBearer(SalesforceCredentialsBasic basic) throws JsonMappingException, JsonProcessingException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
-		params.add("username", basic.getCredential().getUsername());
-		params.add("password", basic.getCredential().getPassword());
-		params.add("client_secret", basic.getCredential().getClientSecret());
-		params.add("client_id", basic.getCredential().getClientId());
-		params.add("grant_type", PASSWORD);
+		params.add(Constants.USERNAME, basic.getCredential().getUsername());
+		params.add(Constants.PASSWORD, basic.getCredential().getPassword());
+		params.add(Constants.CLIENT_SECRET, basic.getCredential().getClientSecret());
+		params.add(Constants.CLIENT_ID, basic.getCredential().getClientId());
+		params.add(Constants.GRANT_TYPE, Constants.GRANT_TYPE_PASSWORD_VALUE);
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(params,
 				headers);
@@ -50,8 +47,8 @@ public class SalesforceOauthSessionProvider {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
-		params.add("assertion", tokenService.getJwt(oauth));
-		params.add("grant_type", JWT_BEARER);
+		params.add(Constants.ASSERTION, tokenService.getJwt(oauth));
+		params.add(Constants.GRANT_TYPE, Constants.GRANT_TYPE_JWT_BEARER_VALUE);
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(params,
 				headers);

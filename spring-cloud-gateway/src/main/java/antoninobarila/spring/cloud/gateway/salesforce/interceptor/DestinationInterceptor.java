@@ -12,8 +12,6 @@ import org.springframework.stereotype.Component;
 public class DestinationInterceptor implements ClientHttpRequestInterceptor {
 	@Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-		
-
 		return  execution.execute(request, body);
     }
 

@@ -1,6 +1,5 @@
 package antoninobarila.spring.cloud.gateway.salesforce.filter;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import org.apache.http.client.ClientProtocolException;
@@ -69,12 +68,6 @@ public class HttpHeaderGatewayFilter extends AbstractGatewayFilterFactory<HttpHe
 
 		if (h.getFirst("x-plt-session-id") == null)
 			h.add("x-plt-session-id", UUID.randomUUID().toString());
-
-//		if (h.getFirst("x-plt-user-id") == null)
-//			h.add("x-plt-user-id", "proxy-mulesoft");
-//
-//		if (h.getFirst("x-plt-solution-user") == null)
-//			h.add("x-plt-solution-user", "proxy-mulesoft");
 
 		if (h.getFirst("Content-Type") == null)
 			h.add("Content-Type", "application/json");

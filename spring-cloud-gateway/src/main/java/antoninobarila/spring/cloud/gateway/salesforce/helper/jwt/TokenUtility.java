@@ -37,7 +37,7 @@ public class TokenUtility {
 					.withAudience(oauth.getCredential().getLoginUrl()).withSubject(oauth.getCredential().getUsername())
 					.withExpiresAt(new Date(System.currentTimeMillis()))
 					.sign(algorithm);
-			log.info("JWT {}", token);
+			log.trace("JWT {}", token);
 
 		} catch (Exception e) {
 			log.error("Token generation error.", e);
