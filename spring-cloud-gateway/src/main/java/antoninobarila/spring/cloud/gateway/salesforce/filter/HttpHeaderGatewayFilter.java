@@ -1,7 +1,5 @@
 package antoninobarila.spring.cloud.gateway.salesforce.filter;
 
-import java.util.UUID;
-
 import org.apache.http.client.ClientProtocolException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -10,8 +8,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import antoninobarila.spring.cloud.gateway.salesforce.credential.SalesforceCredentialsBasic;
-import antoninobarila.spring.cloud.gateway.salesforce.credential.SalesforceCredentialsOAuth;
+import antoninobarila.spring.cloud.gateway.salesforce.credential.SalesforceCredentialsJWT;
+import antoninobarila.spring.cloud.gateway.salesforce.helper.Constants;
 import antoninobarila.spring.cloud.gateway.salesforce.provider.SalesforceOauthSessionProvider;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,12 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HttpHeaderGatewayFilter extends AbstractGatewayFilterFactory<HttpHeaderGatewayFilter.Config> {
 
+
 	@Autowired
-	SalesforceCredentialsBasic basic;
-	
-	@Autowired
-	SalesforceCredentialsOAuth oauth;
-	
+	SalesforceCredentialsJWT jwt;
+
 	@Autowired
 	SalesforceOauthSessionProvider provider;
 
@@ -64,10 +60,15 @@ public class HttpHeaderGatewayFilter extends AbstractGatewayFilterFactory<HttpHe
 
 	private void manageHeader(HttpHeaders h) throws Exception {
 
-		h.add(HttpHeaders.AUTHORIZATION, "Bearer ".concat(provider.getBearer(oauth)));
+		String user = (h.containsKey(Constants.SALESFORCE_SESSIONID)
+				? provider.getUser(jwt.getCredential().getLoginUrl(), h.get(Constants.SALESFORCE_SESSIONID).get(0))
+				: jwt.getCredential().getTechnicalUser());
+		String bearer = provider.getBearer(user, jwt);
+		log.trace("TOKEN {}",bearer);
+		h.add(HttpHeaders.AUTHORIZATION, "Bearer ".concat(bearer));
 
-		if (h.getFirst("x-plt-session-id") == null)
-			h.add("x-plt-session-id", UUID.randomUUID().toString());
+//		if (h.getFirst("x-plt-session-id") == null)
+//			h.add("x-plt-session-id", UUID.randomUUID().toString());
 
 		if (h.getFirst("Content-Type") == null)
 			h.add("Content-Type", "application/json");

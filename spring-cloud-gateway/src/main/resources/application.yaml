@@ -2,10 +2,10 @@ server:
   port: 8080
 logging:
   level:
-    antoninobarila.spring.cloud.gateway: DEBUG
+    antoninobarila.spring.cloud.gateway: TRACE
     org.springframework.security: TRACE
-    org.springframework.cloud.gateway: DEBUG
-    reactor.netty.http.client: DEBUG
+    org.springframework.cloud.gateway: TRACE
+    reactor.netty.http.client: TRACE
 spring :
    application:
       name: spring-gateway
@@ -77,12 +77,11 @@ resilience4j.timelimiter:
       timeoutDuration: 5000ms
 
 credential:
-   oauth :
-      loginUrl :  ${endpoint_destination_login_url:https://login.salesforce.com}
-      username : ${endpoint_destination_username}
-      clientID : ${endpoint_destination_clientID}
-      certAlias : ${client_keystore_alias:proxyTest}
-      certPassword : ${client_keystore_password:password}
-      password :
-      clientSecret :
+   jwt :
+      loginUrl :  ${jwt_autentication_url}
+      audience :  ${jwt_endpoint_url}
+      issuer : ${jwt_clientid}
+      technicaluser : ${jwt_technical_user}
+      certAlias : ${jwt_keystore_alias}
+      certPassword : ${jwt_keystore_password}
 

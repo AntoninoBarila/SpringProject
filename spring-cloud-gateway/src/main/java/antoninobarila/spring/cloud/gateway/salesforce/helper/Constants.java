@@ -17,8 +17,11 @@ public class Constants {
 	public static final String HEADER_AUTHORIZATION = "Authorization";
 	public static final String HEADER_AUTH_TYPE = "Basic ";
 	public static final String HEADER_CONTENT_TYPE = "Content-Type";
+	public static final String HEADER_CONTENT_APP_JSON = "application/json";
 	public static final String HEADER_CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
 	public static final String ACCESS_TOKEN = "access_token";
+	public static final String FORMAT = "format";
+	public static final String SALESFORCE_SESSIONID = "x-plt-session-id";
 	public static final int HTTP_STATUS_200 = 200;
 	public static final int HTTP_STATUS_300 = 300;
 }
