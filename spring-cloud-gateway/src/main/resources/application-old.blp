@@ -1,0 +1,85 @@
+server:
+  port: 8080
+logging:
+  level:
+    antoninobarila.spring.cloud.gateway: DEBUG
+    org.springframework.security: TRACE
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
+spring :
+   application:
+      name: spring-gateway
+   cloud:
+      gateway:
+         httpclient:
+            ssl:
+                useInsecureTrustManager: true
+         routes: 
+           - id: ${endpoint_destination_serviceName}-proxy
+             uri: ${endpoint_destination_protocol}://${endpoint_destination_fqdn}
+             predicates:
+               - Path=${endpoint_origin_context}/**
+             filters:
+               - HttpHeaderGatewayFilter
+               - RewritePath=${endpoint_origin_context}/(?<segment>.*),${endpoint_destination_context}/$\{segment}
+               - name: CircuitBreaker
+                 args:
+                   name: ${endpoint_destination_serviceName}-proxy
+                   fallbackUri: forward:/fallback/manage
+                                
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 5
+      minimumNumberOfCalls: 5
+      permittedNumberOfCallsInHalfOpenState: 3
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+      waitDurationInOpenState: 2s
+      failureRateThreshold: 5
+      eventConsumerBufferSize: 10
+      slowCallDurationThreshold: 200ms
+      slowCallRateThreshold: 30
+      recordExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.io.IOException
+        - java.lang.RuntimeException
+      ignoreExceptions:
+        - java.lang.IllegalStateException
+    shared:
+      slidingWindowSize: 100
+      permittedNumberOfCallsInHalfOpenState: 30
+      waitDurationInOpenState: 1s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
+      ignoreExceptions:
+        - java.lang.IllegalStateException
+    internalService:
+      slidingWindowSize: 3
+      minimumNumberOfCalls: 3
+      permittedNumberOfCallsInHalfOpenState: 3
+      waitDurationInOpenState: 1s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
+      recordExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.io.IOException
+        - java.lang.RuntimeException
+      ignoreExceptions:
+        - java.lang.IllegalStateException
+
+resilience4j.timelimiter:
+  time-limiter-aspect-order: 398
+  configs:
+    default:
+      timeoutDuration: 1s
+      cancelRunningFuture: false
+    internalService:
+      timeoutDuration: 5000ms
+
+credential:
+   oauth :
+      username : ${endpoint_destination_username}
+      password : ${endpoint_destination_password}
+      clientID : ${endpoint_destination_clientID}
+      clientSecret : ${endpoint_destination_clientSecret}
+
